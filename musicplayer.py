@@ -24,6 +24,48 @@ def play_song():
     except Exception as e:
         print(e)
         song_title_label.config(fg="red", text="Error playing track")
+
+def reduce_volume():
+    try:
+        global current_volume
+        if current_volume <=0:
+            volume_label.config(fg="red", text="Volume : Muted")
+            return
+        current_volume = current_volume - float(0.1)
+        current_volume = round(current_volume,1)
+        mixer.music.set_volume(current_volume)
+        volume_label.config(fg="green", text="Volume: "+str(current_volume))
+    except Exception as e:
+        print(e)
+        song_title_label.config(fg="red",text="Song hasn't been selected yet")
+
+def increase_volume():
+    try:
+        global current_volume
+        if current_volume >=1:
+            volume_label.config(fg="green", text="Volume : Max")
+            return
+        current_volume = current_volume + float(0.1)
+        current_volume = round(current_volume,1)
+        mixer.music.set_volume(current_volume)
+        volume_label.config(fg="green", text="Volume: "+str(current_volume))
+    except Exception as e:
+        print(e)
+        song_title_label.config(fg="red",text="Song hasn't been selected yet")
+def pause():
+    try:
+        mixer.music.pause()
+    except Exception as e:
+        print(e)
+        song_title_label.config(fg="red",text="Song hasn't been selected yet")
+
+def resume():
+    try:
+        mixer.music.unpause()
+    except Exception as e:
+        print(e)
+        song_title_label.config(fg="red",text="Song hasn't been selected yet")
+
 #Main Screen
 master = Tk()
 master.title("Music Player")
@@ -39,9 +81,9 @@ volume_label.grid(sticky="N",row=5)
 
 #Buttons
 Button(master,text="Select Song", font=("Arial",12),command=play_song).grid(row=2,sticky="N")
-Button(master,text="Pause", font=("Arial",12)).grid(row=3,sticky="E")
-Button(master,text="Resume", font=("Arial",12)).grid(row=3,sticky="W")
-Button(master,text="-", font=("Arial",12),width=5).grid(row=5,sticky="w")
-Button(master,text="+", font=("Arial",12),width=5).grid(row=5,sticky="E")
+Button(master,text="Pause", font=("Arial",12),command=pause).grid(row=3,sticky="E")
+Button(master,text="Resume", font=("Arial",12),command=resume).grid(row=3,sticky="W")
+Button(master,text="-", font=("Arial",12),width=5,command=reduce_volume).grid(row=5,sticky="w")
+Button(master,text="+", font=("Arial",12),width=5,command=increase_volume).grid(row=5,sticky="E")
 
 master.mainloop()
